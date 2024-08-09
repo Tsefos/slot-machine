@@ -1,1 +1,51 @@
+import random
 
+# ANSI escape codes for colors
+ORANGE = "\033[93m"
+GREEN = "\033[92m"
+RED = "\033[91m"
+PURPLE = "\033[95m"
+RESET = "\033[0m"
+
+class SlotMachine:
+    symbols = ['Cherry', 'Bell', 'Lemon', 'Orange', 'Star', 'Diamond']
+
+    def __init__(self, coins):
+        self.coins = coins
+
+    def pull_lever(self, bet):
+        if bet > self.coins:
+            print(ORANGE + "You don't have enough coins!" + RESET)
+            return
+
+        self.coins -= bet
+
+        result = [random.choice(self.symbols) for _ in range(3)]
+        print(" ".join(result))
+
+        if result.count(result[0]) == 3:
+            print(PURPLE + " Jackpot! You won 10 times your bet! " + RESET)
+            self.coins += bet * 10
+        elif result.count(result[0]) == 2:
+            print(GREEN + "Two of a kind! You won 5 times your bet!" + RESET)
+            self.coins += bet * 5
+        else:
+            print(RED + "Sorry, you lost." + RESET)
+
+    def display_coins(self):
+        print(f"You have {self.coins} coins.")
+
+def main():
+    coins = 50
+    machine = SlotMachine(coins)
+
+    while True:
+        machine.display_coins()
+        bet = int(input("How many coins do you want to bet? (Enter 0 to quit): "))
+        if bet == 0:
+            print("Thanks for playing!")
+            break
+        machine.pull_lever(bet)
+
+if __name__ == "__main__":
+    main()
